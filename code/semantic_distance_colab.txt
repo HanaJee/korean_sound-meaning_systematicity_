@@ -1,0 +1,32 @@
+'''This code measures distances between words within the pre-trained corpus (FastText)'''
+
+#!pip install gensim
+import os
+from google.colab import drive
+drive.mount('/content/drive')
+!ls "/content/drive/My Drive/Kor::Semantic Distance"
+
+os.chdir("/content/drive/My Drive/Kor::Semantic Distance")
+!ls
+
+
+'''Using pre-trained word vectors, phonological distance includes onset, vowel, coda, respectively'''
+
+from gensim.models import FastText
+import numpy as np
+import pandas as pd
+
+model=FastText.load_fasttext_format('./wiki.ko')
+#print(model.similarity('밤','낮')) 
+
+f=pd.read_excel('Sample_Combi.xlsx', encoding='utf-8')
+
+sim=[]
+for index, row in f.iterrows():
+  val=model.similarity(row['First'], row['Second'])
+  sim.append(val)
+  
+#print(sim)                   
+f['Similarity']=sim
+print(f)
+f.to_excel('Result_Pre-trained_FastText.xlsx')

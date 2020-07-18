@@ -1,0 +1,52 @@
+import pandas as pd
+import textdistance as txt
+import os
+from scipy.spatial.distance import euclidean
+
+def dist(a,b):
+    return edit_distance(a,b)
+
+def euclid(x,y):   
+    return np.sqrt(np.sum((x-y)**2))
+
+#####################################3
+f = pd.read_excel('Phono.xlsx')
+Cho1 = f['Cho'].tolist()
+Jung1 = f['Jun'].tolist()
+Jong1= f['Fin'].tolist()
+Cho2 = f['Cho2'].tolist()
+Jung2 = f['Jun2'].tolist()
+Jong2 = f['Fin2'].tolist()
+
+Edit_d = []
+Euclid_d = []
+Cosine_d = []
+Jaccard_d = []
+ 
+i=0
+while True:
+    w1 = eval(Jong1[i])
+    w2 = eval(Jong2[i])
+    
+    leven = txt.levenshtein(w1,w2)
+    euclid = euclidean(w1,w2)
+    cosine = txt.cosine(w1,w2)
+    jaccard = txt.jaccard(w1,w2)
+        
+    Edit_d.append(leven)
+    Euclid_d.append(euclid)
+    Cosine_d.append(cosine)
+    Jaccard_d.append(jaccard)
+    
+    i += 1
+    if i == len(Jong1):
+        break  
+        
+f['Edit3'] = Edit_d
+f['Euclid3'] = Euclid_d
+f['Cosine3'] = Cosine_d
+f['Jaccard3'] = Jaccard_d
+
+
+f.to_excel('Phono_Final.xlsx', engine = 'xlsxwriter')
+
